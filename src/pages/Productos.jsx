@@ -5,8 +5,8 @@ export default function Productos() {
   const [productos, setProductos] = useState([]);
 
   useEffect(() => {
-    console.log("Haciendo GET a /getProductos");
-    api.get('/getProductos').then(setProductos);
+    console.log("Haciendo GET a /productos/getProductos");
+    api.get('/productos/getProductos').then(setProductos);
   }, []);
 
   return (
