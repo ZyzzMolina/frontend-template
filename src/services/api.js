@@ -3,9 +3,18 @@ const API_URL = "http://localhost:4000/api"; // Importante colocar la url de tu 
 export const api = {
   get: async (endpoint) => {
     try {
-      const response = await fetch(`${API_URL}${endpoint}`);
+      console.log(`Solicitando: ${API_URL}${endpoint}`);
+      const response = await fetch(`${API_URL}${endpoint}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      console.log(`Response status: ${response.status}`);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
-      return await response.json();
+      const data = await response.json();
+      console.log(`Datos recibidos:`, data);
+      return data;
     } catch (error) {
       console.error("Error en GET:", error);
       throw error;

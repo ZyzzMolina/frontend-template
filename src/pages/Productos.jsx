@@ -8,14 +8,18 @@ const Productos = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    console.log("Componente Productos montado");
     cargarProductos();
   }, []);
 
   const cargarProductos = async () => {
     try {
-      const data = await api.get('/productos/getProductos'); 
+      console.log("Iniciando carga de productos...");
+      const data = await api.get('/productos/getProductos');
+      console.log("Datos recibidos:", data);
       setProductos(data);
     } catch (err) {
+      console.error("Error detallado:", err);
       setError("No se pudo conectar con el servidor. ¿Está encendido?");
     } finally {
       setLoading(false);
