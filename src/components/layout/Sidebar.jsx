@@ -32,7 +32,7 @@ const Sidebar = () => {
       {/* Footer */}
       <div className="p-4 border-t border-slate-700">
         <button className="flex items-center gap-3 text-red-400 hover:text-red-300 hover:bg-slate-800 w-full px-4 py-3 rounded-lg transition">
-          <LogOut size={20} /> Salir
+          
         </button>
       </div>
     </div>

@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
-import { ShoppingBag, Loader, AlertCircle } from 'lucide-react';
+import { ShoppingBag, Loader, AlertCircle, LogOut } from 'lucide-react';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   useEffect(() => {
     console.log("Componente Productos montado");
@@ -44,9 +51,17 @@ const Productos = () => {
         <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
           <ShoppingBag className="text-blue-600" /> Inventario
         </h1>
-        <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
-          {productos.length} items
-        </span>
+        <div className="flex items-center gap-4">
+          <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-semibold">
+            {productos.length} items
+          </span>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+          >
+            <LogOut size={18} /> Salir
+          </button>
+        </div>
       </header>
 
       {/* Grid Responsivo: 1 col móvil, 2 tablet, 3 desktop */}

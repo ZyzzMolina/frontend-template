@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/layout/Layout';
 import Productos from './pages/Productos';
 import Login from './pages/login';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const Dashboard = () => (
   <div>
@@ -20,10 +21,12 @@ function App() {
         {/* Ruta de login sin Layout */}
         <Route path="/login" element={<Login />} />
         
-        {/* El Layout envuelve las demás rutas */}        
-        <Route element={<Layout />}>
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/productos" element={<Productos />} />
+        {/* El Layout envuelve las demás rutas (RUTAS PRIVADAS) */}        
+        <Route element={<ProtectedRoute />}>
+          <Route element={<Layout />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/productos" element={<Productos />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
