@@ -8,7 +8,8 @@ const Productos = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
-
+  
+// Función para cerrar sesión
   const handleLogout = () => {
     localStorage.removeItem('token');
     navigate('/login');
