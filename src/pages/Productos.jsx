@@ -7,6 +7,11 @@ const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
+    nombre: '',
+    precio: '',
+    imagen_url: ''
+  });
   const navigate = useNavigate();
   
 // Función para cerrar sesión
@@ -31,6 +36,30 @@ const Productos = () => {
       setError("No se pudo conectar con el servidor. ¿Está encendido?");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleCreateProducto = async (e) => {
+    e.preventDefault();
+    try {
+      await api.post('/productos/createProducto', {
+        nombre: formData.nombre,
+        precio: parseFloat(formData.precio),
+        imagen_url: formData.imagen_url
+      });
+      setFormData({ nombre: '', precio: '', imagen_url: '' });
+      cargarProductos();
+    } catch (err) {
+      console.error("Error al crear producto:", err);
+      setError("No se pudo crear el producto. Intenta de nuevo.");
     }
   };
 
@@ -64,6 +93,46 @@ const Productos = () => {
           </button>
         </div>
       </header>
+
+      {/* Formulario simple */}
+      <form onSubmit={handleCreateProducto} className="bg-white p-6 rounded-lg shadow mb-8 border border-slate-200">
+        <h2 className="text-xl font-bold mb-4 text-slate-800">Crear Nuevo Producto</h2>
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre"
+            value={formData.nombre}
+            onChange={handleInputChange}
+            required
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="number"
+            name="precio"
+            placeholder="Precio"
+            step="0.01"
+            value={formData.precio}
+            onChange={handleInputChange}
+            required
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="url"
+            name="imagen_url"
+            placeholder="URL imagen"
+            value={formData.imagen_url}
+            onChange={handleInputChange}
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition-colors"
+          >
+            Guardar
+          </button>
+        </div>
+      </form>
 
       {/* Grid Responsivo: 1 col móvil, 2 tablet, 3 desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
