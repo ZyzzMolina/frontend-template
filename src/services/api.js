@@ -4,13 +4,18 @@ export const api = {
   post: async (endpoint, body) => {
     try {
       const token = localStorage.getItem('token');
-      console.log(`POST a: ${API_URL}${endpoint} con body:`, body);
+      console.log(`POST a: ${API_URL}${endpoint}, Token: ${token}`);
+      
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'POST',
-        headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
-          'Content-Type': 'application/json'
-        },
+        headers: headers,
         body: JSON.stringify(body)
       });
       console.log(`Response status: ${response.status}`);
@@ -26,13 +31,18 @@ export const api = {
   get: async (endpoint) => {
     try {
       const token = localStorage.getItem('token');
-      console.log(`Solicitando: ${API_URL}${endpoint}`);
+      console.log(`GET a: ${API_URL}${endpoint}, Token: ${token}`);
+      
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      
       const response = await fetch(`${API_URL}${endpoint}`, {
         method: 'GET',
-        headers: {
-          'Authorization': token ? `Bearer ${token}` : '',
-          'Content-Type': 'application/json'
-        }
+        headers: headers
       });
       console.log(`Response status: ${response.status}`);
       if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);

@@ -1,15 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../services/api';
-import { ShoppingBag, Loader, AlertCircle, LogOut } from 'lucide-react';
+import { ShoppingBag, Loader, AlertCircle, LogOut, CheckCircle } from 'lucide-react';
 
 const Productos = () => {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [formData, setFormData] = useState({
     nombre: '',
     precio: '',
+    stock: '',
+    id_categoria: '',
     imagen_url: ''
   });
   const navigate = useNavigate();
@@ -50,16 +53,25 @@ const Productos = () => {
   const handleCreateProducto = async (e) => {
     e.preventDefault();
     try {
-      await api.post('/productos/createProducto', {
+      await api.post('/productos/', {
         nombre: formData.nombre,
         precio: parseFloat(formData.precio),
+        stock: parseInt(formData.stock) || 10,
+        id_categoria: parseInt(formData.id_categoria) || 1,
         imagen_url: formData.imagen_url
       });
-      setFormData({ nombre: '', precio: '', imagen_url: '' });
+      setFormData({ nombre: '', precio: '', stock: '', id_categoria: '', imagen_url: '' });
+      setSuccess(`✓ Producto "${formData.nombre}" creado exitosamente`);
+      setError(null);
+      
+      // Limpiar mensaje de éxito después de 3 segundos
+      setTimeout(() => setSuccess(null), 3000);
+      
       cargarProductos();
     } catch (err) {
       console.error("Error al crear producto:", err);
       setError("No se pudo crear el producto. Intenta de nuevo.");
+      setSuccess(null);
     }
   };
 
@@ -94,10 +106,16 @@ const Productos = () => {
         </div>
       </header>
 
+      {success && (
+        <div className="bg-green-100 text-green-700 p-4 rounded-lg flex items-center gap-2 mb-6 border border-green-300">
+          <CheckCircle size={20} /> {success}
+        </div>
+      )}
+
       {/* Formulario simple */}
       <form onSubmit={handleCreateProducto} className="bg-white p-6 rounded-lg shadow mb-8 border border-slate-200">
         <h2 className="text-xl font-bold mb-4 text-slate-800">Crear Nuevo Producto</h2>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <input
             type="text"
             name="nombre"
@@ -118,7 +136,23 @@ const Productos = () => {
             className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
-            type="url"
+            type="number"
+            name="stock"
+            placeholder="Stock"
+            value={formData.stock}
+            onChange={handleInputChange}
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="number"
+            name="id_categoria"
+            placeholder="ID Categoría"
+            value={formData.id_categoria}
+            onChange={handleInputChange}
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
             name="imagen_url"
             placeholder="URL imagen"
             value={formData.imagen_url}
