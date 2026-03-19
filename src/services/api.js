@@ -4,13 +4,16 @@ export const api = {
   post: async (endpoint, body) => {
     try {
       const token = localStorage.getItem('token');
-      console.log(`POST a: ${API_URL}${endpoint}, Token: ${token}`);
+      console.log(`POST a: ${API_URL}${endpoint}`);
+      console.log(`Token disponible:`, token ? `Sí (${token.substring(0, 20)}...)` : `NO - FALTA TOKEN`);
       
       const headers = {
         'Content-Type': 'application/json'
       };
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
+      } else {
+        console.warn('⚠️ No hay token. El usuario debe iniciar sesión nuevamente');
       }
       
       const response = await fetch(`${API_URL}${endpoint}`, {
@@ -19,7 +22,11 @@ export const api = {
         body: JSON.stringify(body)
       });
       console.log(`Response status: ${response.status}`);
-      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Error del servidor:', errorData);
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
       const data = await response.json();
       console.log(`Datos recibidos:`, data);
       return data;

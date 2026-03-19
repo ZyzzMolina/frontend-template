@@ -13,8 +13,12 @@ const Productos = () => {
     precio: '',
     stock: '',
     id_categoria: '',
-    imagen_url: ''
+    imagen_url: '',
+    descripcion: '',
+    youtube_id: ''
+
   });
+
   const navigate = useNavigate();
   
 // Función para cerrar sesión
@@ -58,9 +62,11 @@ const Productos = () => {
         precio: parseFloat(formData.precio),
         stock: parseInt(formData.stock) || 10,
         id_categoria: parseInt(formData.id_categoria) || 1,
-        imagen_url: formData.imagen_url
+        imagen_url: formData.imagen_url,
+        descripcion: formData.descripcion,
+        youtube_id: formData.youtube_id
       });
-      setFormData({ nombre: '', precio: '', stock: '', id_categoria: '', imagen_url: '' });
+      setFormData({ nombre: '', precio: '', stock: '', id_categoria: '', imagen_url: '', descripcion: '', youtube_id: '' });
       setSuccess(`✓ Producto "${formData.nombre}" creado exitosamente`);
       setError(null);
       
@@ -116,6 +122,20 @@ const Productos = () => {
       <form onSubmit={handleCreateProducto} className="bg-white p-6 rounded-lg shadow mb-8 border border-slate-200">
         <h2 className="text-xl font-bold mb-4 text-slate-800">Crear Nuevo Producto</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+         
+          {formData.youtube_id ? (
+            <iframe
+              width="100%"
+              height="200"
+              src={`https://www.youtube.com/embed/${formData.youtube_id}`}
+              title="Video de YouTube"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+
+          ) : null}
           <input
             type="text"
             name="nombre"
@@ -159,6 +179,23 @@ const Productos = () => {
             onChange={handleInputChange}
             className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <input
+            type="text"
+            name="descripcion"
+            placeholder="Descripción"
+            value={formData.descripcion}
+            onChange={handleInputChange}
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <input
+            type="text"
+            name="youtube_id"
+            placeholder="ID Video YouTube"
+            value={formData.youtube_id}
+            onChange={handleInputChange}
+            className="px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
           <button
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-lg transition-colors"
